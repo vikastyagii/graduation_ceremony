@@ -1,0 +1,38 @@
+
+Approach:
+
+We use dynamic programming to keep track of the number of ways to attend classes 
+for each day with different ending conditions (attending class, missing class for 
+1, 2, or 3 consecutive days). The dynamic programming table (dp) is defined as follows:
+
+- dp[i][0]: Number of ways to attend classes for i days, ending with attending the class on the i-th day.
+- dp[i][1]: Number of ways to attend classes for i days, ending with missing the class on the i-th day for 1 day.
+- dp[i][2]: Number of ways to attend classes for i days, ending with missing the class on the i-th day for 2 consecutive days.
+- dp[i][3]: Number of ways to attend classes for i days, ending with missing the class on the i-th day for 3 consecutive days.
+
+State transitions:
+If I am attending class on day i, these are following scenarios for the previous day
+        dp[i-1][0] : attended class on day i-1 as well
+        dp[i-1][1] : missed class on day i-1 for 1 day
+        dp[i-1][2] : missed class on day i-1 for 2 consecutive days
+        dp[i-1][3] : missed class on day i-1 for 3 consecutive days
+hence number of ways I can attend class on ith day is summation of dp[i-1][0], dp[i-1][1], dp[i-1][2], dp[i-1][3]
+
+- dp[i][0] = dp[i-1][0] + dp[i-1][1] + dp[i-1][2] + dp[i-1][3]
+- dp[i][1] = dp[i-1][0] // will be equal to number of ways I can attend class on i-1 th day
+- dp[i][2] = dp[i-1][1] // will be equal to number of ways I can attend class for i-1 days where i-1 th day is the first day I missed the class
+- dp[i][3] = dp[i-1][2] // will be equal to number of ways I can attend class for i-1 days where i-1 th day is the second day consecutively I missed the class
+
+Base cases:  I can either attend or miss the class on day 1 
+- dp[1][0] = 1  # Attended on day 1
+- dp[1][1] = 1  # Missed on day 1
+- dp[1][2] = 0  # Not possible to miss for 2 days on day 1
+- dp[1][3] = 0  # Not possible to miss for 3 days on day 1
+
+Once we have our dp table filled then we can calculate the metrics as follows:
+------------------------------------------------------------------------------
+
+Total number of ways to attend classes over N days is the sum of all dp[N] values, i.e. dp[N][0] + dp[N][1] + dp[N][2] + dp[N][3]
+The number of ways to miss the graduation ceremony is the total number of ways minus dp[N][0]*.
+
+*dp[N][0] represents total number of ways I can attend classes over N days given I attend class on Nth day.
